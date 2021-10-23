@@ -15,7 +15,7 @@ eva = fm.eigenvalues
 #γkx corresponds to growth(kx, ky=fixed)
 #γky corresponds to growth(ky, kx=fixed)
 
-γkx = map(x->imag(eva[x, kyn][1]), 1:21) 
+γkx = circshift(map(x->imag(eva[x, kyn][1]), 1:21), (10,0)) 
 γky = map(x->imag(eva[kxn, x][1]), 1:10) 
 
 fig = Figure()
