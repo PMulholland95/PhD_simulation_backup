@@ -1,7 +1,7 @@
 using DelimitedFiles, CairoMakie, GLMakie 
 GLMakie.activate!()
 
-sc0 = readdlm("omtn_0_fine_scan")
+sc0 = readdlm("edit_omtn_0_fine_scan")
 sc1 = readdlm("omt_1_omn_0_fine_scan")
 sc2 = readdlm("omt_0_omn_1_fine_scan")
 sc3 = readdlm("omt_1_omn_1_fine_scan")
@@ -51,11 +51,11 @@ fontsize_theme = Theme(fontsize = 25)
 set_theme!(fontsize_theme)
 
 Axis(f[1, 1], title = "ωᵣ", xlabel = "β", ylabel = "ky")
-cofreq0 = contourf!(β, ky, om0, levels = 35, colormap = :vik)
+cofreq0 = contourf!(β, ky, om0, levels = 100, colormap = :vik)
 
 Axis(f[1, 3], title = "γ (omtᵢ=3 ; omnᵢ=0 ; omtₑ=0 ; omnₑ=0)"
 , xlabel = "β", ylabel = "ky")
-cogam0 = contourf!(β, ky, gm0, levels = 50, colormap = :vik)
+cogam0 = contourf!(β, ky, gm0, levels = 100, colormap = :vik)
 
 Axis(f[2, 1], title = "ωᵣ", xlabel = "β", ylabel = "ky")
 cofreq1 = contourf!(β, ky, om1, levels = 35, colormap = :vik)

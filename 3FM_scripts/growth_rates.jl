@@ -1,47 +1,33 @@
-using DelimitedFiles, CairoMakie, GLMakie
-GLMakie.activate!()
+using CairoMakie
+using LaTeXStrings
 
-#k(x/y)n = mode number index
-kxn = 1
-kyn = 1
+function plotGammaWavenumber(model::PlasmaTurbulenceSaturationModel.FluidModel;
+		nkx=Int,
+		nky=Int,
+		resolution=(1600,900),
+		fontsize=25,
+		title="Growth rates",
+		)
+	
+	kx = PlasmaTurbulenceSaturationModel.kx(model,negativeModes=true)
+ 	ky = PlasmaTurbulenceSaturationModel.ky(model)
+	evals = model.eigenvalues
+	unstable_γ = circshift(map(x->imag(x[1]),evals), (10,0))
 
-kx = range(-0.5,0.5, length=21)
-ky = range(0.05,0.5, length=10)
+	gkx = unstable_γ[1:length(kx),nky] 
+	gky = unstable_γ[nkx,1:length(ky)] 
 
-#eva = eigenvalues
-eva = fm.eigenvalues
-#ykx = []
+	f = Figure()
 
-#γkx corresponds to growth(kx, ky=fixed)
-#γky corresponds to growth(ky, kx=fixed)
+	fontsize_theme = Theme(fontsize = fontsize)
+	set_theme!(fontsize_theme)
 
-γkx = circshift(map(x->imag(eva[x, kyn][1]), 1:21), (10,0)) 
-γky = map(x->imag(eva[kxn, x][1]), 1:10) 
+	Axis(f[1,1], title = title, xlabel = L"k_x")
+	lines!(kx, gkx, color = :red)
 
-fig = Figure()
+	Axis(f[1,2], title = title, xlabel = L"k_y")  
+	lines!(ky, gky, color = :blue)
 
-fontsize_theme = Theme(fontsize = 25)
-set_theme!(fontsize_theme)
-
-ax1 = Axis(fig[1,1])
-ax2 = Axis(fig[1,2]) 
-
-γkxline = lines!(ax1, kx, γkx, color = :red)
-γkyline = lines!(ax2, ky, γky, color = :blue)
-
-ax1.title = "γ"
-ax1.xlabel = "kx"
-
-ax2.title = "γ"
-ax2.xlabel = "ky"
-
-xlims!(ax1, -0.6, 0.6)
-xlims!(ax2, 0.0, 0.55)
-ylims!(ax1, 0, 0.035)
-ylims!(ax2, 0, 0.22)
-
-
-save("growth_wavenumber.png",fig)
-
-fig
+	f
+end
 

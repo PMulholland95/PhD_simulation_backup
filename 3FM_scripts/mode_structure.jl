@@ -1,73 +1,66 @@
-using DelimitedFiles, CairoMakie, GLMakie
-GLMakie.activate!()
-
-include("convert.jl")
-
-#mn = mode number
-kxn = range(1,21, length=21)
-kyn = range(1,10, length=10)
-
-function cvint(x)
-	x = convert(Array{Int}, x)
-end
-
-kxn = cvint(kxn)
-kyn = cvint(kyn)
-
-#eve = eigenvectors
-eve = fm.eigenvectors
+using CairoMakie
+using LaTeXStrings
 
 
-function ϕ(i,j)
+function ϕ(model::PlasmaTurbulenceSaturationModel.FluidModel;
+		nkx=Int,
+		nky=Int,
+		resolution=(1600,900),
+		fontsize=25,
+		title="Mode structure = ϕ",
+		)
+	
+	eve = model.eigenvectors
+	pts = model.points
+	evec = circshift(eve, (10,0))
+	ptsc = circshift(pts, (10,0))
+	mabs = map(x->abs(evec[nkx,nky](x)), ptsc[nkx,nky]) 
 
-	fig = Figure()
+	f = Figure()
 
-	fontsize_theme = Theme(fontsize = 25)
+	fontsize_theme = Theme(fontsize = fontsize)
 	set_theme!(fontsize_theme)
 
-	ax1 = Axis(fig[1,1])
+	Axis(f[1,1], title = title, xlabel = "θ")
+	lines!(ptsc[nkx,nky], mabs)
 
-	mpts = fm.points[kxn[i], kyn[j]]
-	mode = eve[kxn[i], kyn[j]]
-	lines(ax1, mpts, map(x->abs(mode(x)), mpts))
-
-	ax1.title = "ϕ"
-	ax1.xlabel = "θ"
-	
-	save("single_mode.png",fig)
-
-	fig
+	f
 
 end
 
 
 
-function msplots(a,b,c,d,e,f)
+function msplots(model::PlasmaTurbulenceSaturationModel.FluidModel;
+		nkxa=Int,
+		nkya=Int,
+		nkxb=Int,
+		nkyb=Int,
+		nkxc=Int,
+		nkyc=Int,
+		resolution=(1600,900),
+		fontsize=25,
+		title="Mode structure = ϕ",
+		)
 
-	fig = Figure()
+	
+	eve = model.eigenvectors
+	pts = model.points
+	evec = circshift(eve, (10,0))
+	ptsc = circshift(pts, (10,0))
 
-	fontsize_theme = Theme(fontsize = 25)
+	mabsa = map(x->abs(evec[nkxa,nkya](x)), ptsc[nkxa,nkya]) 
+	mabsb = map(x->abs(evec[nkxb,nkyb](x)), ptsc[nkxb,nkyb]) 
+	mabsc = map(x->abs(evec[nkxc,nkyc](x)), ptsc[nkxc,nkyc]) 
+
+	f = Figure()
+
+	fontsize_theme = Theme(fontsize = fontsize)
 	set_theme!(fontsize_theme)
 
-	ax1 = Axis(fig[1,1])
-
-	mpts1 = fm.points[kxn[a], kyn[b]]
-	mode1 = eve[kxn[a], kyn[b]]
-
-	mpts2 = fm.points[kxn[c], kyn[d]]
-	mode2 = eve[kxn[c], kyn[d]]
-
-	mpts3 = fm.points[kxn[e], kyn[f]]
-	mode3 = eve[kxn[e], kyn[f]]
-
-	ms1 = lines!(ax1, mpts1, map(x->abs(mode1(x)), mpts1), color = :red) 
-	ms2 = lines!(ax1, mpts2, map(x->abs(mode2(x)), mpts2), color = :blue) 
-	ms3 = lines!(ax1, mpts3, map(x->abs(mode3(x)), mpts3), color = :green) 
-
-	ax1.title = "ϕ"
-	ax1.xlabel = "θ"
+	Axis(f[1,1], title = title, xlabel = "θ")
+	lines!(ptsc[nkxa,nkya], mabsa, color = :red)
+	lines!(ptsc[nkxb,nkyb], mabsb, color = :blue)
+	lines!(ptsc[nkxc,nkyc], mabsc, color = :green)
 	
-	save("multi_mode.png",fig) 
-
-	fig
+	f
 end
