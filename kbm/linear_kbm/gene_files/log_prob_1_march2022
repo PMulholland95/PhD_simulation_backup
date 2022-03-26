@@ -1,0 +1,447 @@
+************************************************************************************PROBLEM-CATALOGUE********************************************************************
+
+LINEAR SIMULATIONS
+
+p01: ITG scan (adiabatic electrons)
+p02: ITG 'control' run (adiabatic electrons; single run)
+p03: Convergence test on p02: hypz (2 -> 4)
+p04: Convergence test on p02: hypv (0.2 -> 0.4)
+p05: ITG scan (both species are kinetic)
+
+p06: 	(1) ITG 'control' run (kinetic electrons, single run)
+
+	(2) Convergence test on (1): nx0 (3 -> 5)
+IGNORE:	(3) Convergence test on (1): nky0 (1 -> 2)
+
+	(4) Convergence test on (1): nz0 (24 -> 30) 
+	(5) Convergence test on (1): nv0 (32 -> 34)
+	(6) Convergence test on (1): nw0 (8 -> 10)
+
+	(7) Convergence test on (1): nz0 (24 -> 48)
+	(8) Convergence test on (1): nv0 (32 -> 64)
+	(9) Convergence test on (1): nw0 (8 -> 16)
+
+p07: ITG scan over kyrho=[0.1-0.8] (omt=6.96; adiabatic electrons)
+p08: ITG scan over kyrho=[0.1-0.8] (omt=6.96; both species are kinetic)
+
+************************************************************************************************************************************************************************
+
+NONLINEAR SIMULATIONS
+
+p09:	(0) ITG run (adiabatic electrons) [simtimelim=500] - <Qes> = 29.36 ± 1.28 (sigma=6.17)	
+	(1) ITG run (adiabatic electrons) [simtimelim=5000] - <Qes> = 25.8 ± 1.41 (sigma=7.11) 
+	
+	(2) Convergence test on (1): nw0 (8 -> 16) [end time: 484] - <Qes> = 31.13 ± 1.64 (sigma=5.59) - %Diff compared with (1): ~21%     	
+	(3) Convergence test on (1): nz0 (16 -> 32) [end time: 435] - <Qes> = 20.09 ± 0.0 (sigma=5.75) - %Diff compared with (1): ~22%
+	(4) Convergence test on (1): nv0 (36 -> 72) [end time: 498] - <Qes> = 23.86 ± 0.0 (sigma=6.43) - %Diff compared with (1): ~8%  	
+	
+DO-OVER:(a) Convergence test on (1): nx0 (128 -> 256) [end time: 500] - <Qes> = 21.58 ± 1.44 (sigma=5.21) - %Diff compared with (1): ~16% [=> NEW BASECASE]
+	(b) Convergence test on (a): nz0 (16 -> 32) [end time: 257] - <Qes> = 18.03 ± 0.0 (sigma=3.66) - %Diff compared with (a): ~16% [=> NEW BASECASE] 
+	(c) Convergence test on (b): nv0 (36 -> 72) [end time: 133] - <Qes> = 19.67 ± 0.0 (sigma=1.79) - %Diff compared with (b): ~9%      
+ 	(d) Convergence test on (b): nw0 (8 -> 16) [end time: 131] - <Qes> = 37.28 ± 0.0 (sigma=5.93) - %Diff compared with (b): ~%     
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+p10:	(0) ITG run (CBC - adiabatic electrons) [simtimelim=1500 (fully completed)] - <Qes> = 29.5 ± 1.45 (sigma=7.53) [BASECASE]
+	
+	(1&7) Convergence test on (0): nx0 (128 -> 256) [end time: 1500/1500] - <Qes> = 29.88 ± 2.25  (sigma=7.66) - %Diff compared with (0): ~1% 
+	(9)   Convergence test on (0): nz0 (16 -> 32) [end time: 1500/1500] - <Qes> = 12.48 ± n/a (sigma=8.19) - %Diff compared with (0): ~57% [=> NEW BASECASE?]
+	(10)  Convergence test on (0): nv0 (36 -> 72) [end time: 1500/1500] - <Qes> = 25.78 ± n/a (sigma=) - %Diff compared with (0): ~12%
+	(11)  Convergence test on (0): nw0 (8 -> 16) [end time: 1500/1500] - <Qes> = 25.1 ± 1.19 (sigma=6.47) - %Diff compared with (0): ~15%
+
+REDO: (1&7) -> (12) Convergence test on (0): nx0 (128 -> 256) [end time: 1500/1500] - <Qes> = 30.6 ± 1.68  (sigma=7.82) - %Diff compared with (0): ~4%
+REDO: (9)   -> (13) Convergence test on (0): nz0 (16 -> 32) [end time: 1500/1500] - <Qes> = 12.48 ± n/a (sigma=8.19) - %Diff compared with (0): ~57%
+
+IGNORE:		(2&8) Convergence test on (1): nz0 (16 -> 32) [end time: 1500/1500] - <Qes> = 12.44 ± 1.11 (sigma=3.49) - %Diff compared with (1): ~42% [=> NEW BASECASE]
+		(3) Convergence test on (2): nv0 (36 -> 72) [end time: 453/1500] - <Qes> = 13.05 ± n/a (sigma=4.74) - %Diff compared with (2): ~5%
+		(4) Convergence test on (2): nw0 (8 -> 16) [end time: 399/1500] - <Qes> = 24.89 ± n/a (sigma=4.33) - %Diff compared with (2): ~100%
+		(5&6) ITG run (adiabatic electrons) [end time: 1037/1500] - <Qes> = 5.48 ± n/a (sigma=6.89) [Higher resolution for all parameters: nx0=256; nz0=32; nv0=72; nw0=16]
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+p11:	(0) ITG run (GradT=9.96 - adiabatic electrons) [simtimelim=1500 (fully completed)] - <Qes> = 112.28 [BASECASE]
+
+	(1) Convergence test on (0): nx0 (128 -> 256) [end time: 1500/1500] - <Qes> = 111.31 - %Diff compared with (0): ~0.01%
+	(2) Convergence test on (0): nz0 (16 -> 32) [end time: 1500/1500] - <Qes> = 107.5 - %Diff compared with (0): ~4%
+	(3) Convergence test on (0): nv0 (36 -> 72) [end time: 1500/1500] - <Qes> = 108.89 - %Diff compared with (0): ~3%
+	(4) Convergence test on (0): nw0 (8 -> 16) [end time: 1500/1500] - <Qes> = 111.67 - %Diff compared with (0): ~0.01%
+
+Convergence checks exclusive to nonlinear simulations:
+
+	(5) Convergence test on (0): lx (100 -> 200) & nx0 (128 -> 256) [end time: 1500/1500] - <Qes> = 109.81 - %Diff compared with (0): ~2%
+	(6) Convergence test on (0): kymin (0.05  -> 0.025) & nky0 (24 -> 48) [end time: 1500/1500] - <Qes> = 130.0 - %Diff compared with (0): ~15.8% 
+
+	-> (7) Convergence test on (6): kymin (0.025  -> 0.0125) & nky0 (48  -> 96) [end time: 1474/1500] - <Qes> = 139.28 - %Diff compared with (6): ~7.1% => [(6) is NEW BASECASE]
+
+Using (6) as new basecase, will redo (nonlinear) convergence checks:
+	
+	(8) Convergence test on (6): lx (100 -> 200) & nx0 (128 -> 256) [end time: 1500/1500] - <Qes> =  130.14 - %Diff compared with (0): ~0.1%
+	(9) Convergence test on (6): lv (3 -> 6) & nv0 (36 -> 72) [end time: 1273/1500] - <Qes> = 129.78 - %Diff compared with (6): ~0.2%
+	(10) Convergence test on (6): lw (9 -> 18) & nw0 (16 -> 32) [end time: 1217/1500] - <Qes> = 129.11 - %Diff compared with (6): ~0.7%
+	(11) Convergence test on (6): hypz (2 -> 4) [end time: 1500/1500] - <Qes> = 130.1 - %Diff compared with (6): ~0.08%%
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+KBM Linear Simulations - recreating results from Aleynikova_2018
+
+Beta_gene = 1/2*(Beta_gist)
+
+p12:
+
+	Scanning over kyrho - keeping Beta constant in each case
+
+	scanfiles000_:
+	-> 0: kymin scan: 0.10, 0.10, 3.0 ; Beta_gene = 0
+	-> 1: kymin scan: 0.10, 0.10, 3.0 ; Beta_gene = 0.0055488
+	-> 2: kymin scan: 0.10, 0.10, 3.0 ; Beta_gene = 0.0111065 
+	-> 3: kymin scan: 0.10, 0.10, 3.0 ; Beta_gene = 0.0291010
+
+	Scanning over kyrho and Beta simultaneously - see Figure 7(a) of Aley_18 
+
+	scanfiles000_:
+	-> 4: kymin scan: 0.05, 0.10, 0.8 ; Beta_scan: 0, 0.001, 0.005 ; gist: 0.0 
+	-> 5: kymin scan: 0.05, 0.05, 0.8 ; Beta_scan: 0.000, 0.001, 0.005 ; gist: 0.0
+	-> 6: kymin scan: 0.05, 0.05, 0.8 ; Beta_scan: 0.006, 0.001, 0.011 ; gist: 1.0
+	-> 7: kymin scan: 0.05, 0.05, 0.8 ; Beta_scan: 0.012, 0.001, 0.016 ; gist: 2.0
+	-> 8: kymin scan: 0.05, 0.05, 0.8 ; Beta_scan: 0.029, 0.001, 0.035 ; gist: 5.5 
+
+Need higher values to nkx0 - Run convergence checks
+
+	scanfiles000_:
+	-> 9: kymin scan: 0.05, 0.05, 0.8 ; Beta_scan: 0.000, 0.001, 0.005 ; gist: 0.0 ; [nx0: 3 -> 15]
+	->10: kymin scan: 0.05, 0.05, 0.8 ; Beta_scan: 0.029, 0.001, 0.035 ; gist: 5.5 ; [nx0: 3 -> 15]
+	->11: kymin scan: 0.05, 0.05, 0.8 ; Beta_scan: 0.029, 0.001, 0.035 ; gist: 5.5 ; [nx0: 3 -> 15, hypz -> 8, given longer wallclock time]
+
+Keeping kyrho constant (kyrho=0.8, unless stated otherwise) while scanning over Beta:
+
+	->12: Beta_scan: 0.000, 0.001, 0.004 ; gist 0.0 ; [nx0=15, hypz=8] 
+	->13: Beta_scan: 0.005, 0.001, 0.010 ; gist 1.0 ; [nx0=15, hypz=8] 
+	->14: Beta_scan: 0.011, 0.001, 0.015 ; gist 2.0 ; [nx0=15, hypz=8] 
+	->15: Beta_scan: 0.030, 0.001, 0.035 ; gist 5.5 ; [nx0=15, hypz=8] 
+
+Various scans:
+
+	->16: Beta_scan: 0.030, 0.001, 0.035 ; gist 5.5 ; [nx0=15, hypz=8, nv0=96] 
+	->17: kymin scan: 0.05, 0.10, 0.8 ; Beta_scan: 0.030, 0.001, 0.035 ; gist 5.5 ; [nx0=15, hypz=8, nv0=96]
+	->18: kymin = 0.10 ; Beta_scan: 0.000, 0.005, 0.035 ; gist 0.0 ; [nx0=15, hypz=8, nv0=8] 
+	->19: kymin = 0.80 ; Beta_scan: 0.000, 0.005, 0.035 ; gist 0.0 ; [nx0=15, hypz=8, nv0=8]
+	->20: kymin = 0.10 ; Beta_scan: 0.030, 0.001, 0.035 ; gist 5.5 ; [nx0=15, hypz=8, nv0=8] 
+	->21: kymin = 0.05 ; Beta_scan: 0.030, 0.001, 0.035 ; gist 5.5 ; [nx0=15, hypz=8, nv0=8] 
+	->22: kymin = 0.10 ; Beta_scan: 0.024, 0.001, 0.029 ; gist 4.5
+	->23: kymin scan  = 0.10, 0.10, 0.80 ; Beta: 0.03 ; gist 4.5
+	->24: 23, omt_e/i = 3.0
+	->25: 22, omt_e/i = 3.0
+	->26: kymin scan: 0.05, 0.1, 0.55 ; Beta = 0.03 ; gist 4.5
+	->27: 26, omt_e/i = 1.9
+	->28: 26, omt_e/i = 2, !dpdx ; ************* Agrees with Ksenia's result 
+	->29: kymin scan = 0.05, 0.1, 0.55 ; Beta = 0.03 ; !dpdx ; gist 5.5
+	->30: kymin = 0.05 ; Beta_scan = 0.024, 0.001, 0.029 ; gist 4.5
+	->31: 30, kymin = 0.1
+	->32: kymin scan = 0.05, 0.05, 0.8 ; Beta_scan = 0.024, 0.001, 0.029 ; !dpdx ; gist 4.5 
+	->33: kymin scan = 0.05, 0.05, 0.8 ; Beta_scan = 0.024, 0.001, 0.029 ; omt_e/i = 1.9 ; gist 4.5
+	->34: kymin scan = 0.05, 0.10, 0.55 ; Beta_scan = 0.03 ; !dpdx ; omt_e/i = 3.0 ; gist 5.5 
+	->35: kymin scan = 0.10, 0.10, 0.80 ; Beta = 0.026 ; !dpdx ; omt_e/i = 2.0 ; gist 4.5
+	->36: Ignore - dud
+	->37: Test: replicated 28 - now working again
+	->38: kymin scan = 0.05, 0.10, 0.55 ; Beta_scan = 0.024, 0.001, 0.029 ; !dpdx ; gist 4.5 [nx0=30] - agrees with 32 
+
+Up to now:
+
+- Have been running fully consistent scans - using different gist files for appropriate beta ranges, and also calculating dpdx in self-consistent way
+- This will lead to me reproducing figure 10 of Aleynikova 2018, NOT figure 7
+
+Now know correct procedure for recreating figure 7 of Aleynikova 2018:
+
+- Use ONE gist file (Beta_equil = 3% - I don't have this file, so will use gist***2.0 instead)
+- Vary dpdx MANUALLY in gist file where large crosses are seen in figure 7 (I only have some of these dpdx values, so will use those for now)
+  OR: Allow GENE to self-consistently evaluate dpdx (using 'full_drift' in parametes file)
+- Run sims for appropriate range of beta values - regions between large crosses - and scan over wavenumber (kymin_scan = 0.05, 0.05, 0.8) 
+- Results will not exactly match figure 7, due to different gist file (beta_equil = 2%, instead of 3%) and limited dpdx values
+- General shape of figure 7 should emerge
+
+More scans (with new info in mind), where I'm using gist***2.0 and evaluating dpdx self-consistently:
+
+	->39: Ignore - discontinued
+	->40: kymin scan = 0.05, 0.05, 0.8 ; beta scan = 0.0, 0.005, 0.035 ; using dpdx_term = 'full_drift'
+
+Scans in gist***0.0 - for which npol = 1 - will create new gist with npol>1 to compare (see p15 below)
+
+	->41: kymin scan = 0.05, 0.05, 0.8 ; beta scan = 0.0, 0.005, 0.035 ; npol = 1 ; gist***00 
+ 
+p13: Fine-grain beta_scan for KBM-gamma(ky) "bumps" at very low ky 
+
+	-> 0: Ignore: discontinued 
+	-> 1: kymin_scanlist: 0.01, 0.02, 0.03, 0.04, 0.05 ; beta_scan = 0.0, 0.002, 0.020 ; omt_i = 3.0, omt_e = 0.0, omn_e/i = 0.0	
+	-> 2: kymin_scanlist: 0.01, 0.02, 0.03, 0.04, 0.05 ; beta_scan = 0.0, 0.002, 0.020 ; omt_i = 3.0, omt_e = 1.0, omn_e/i = 0.0
+	-> 3: Ignore: broke quasineutrality
+	-> 4: kymin_scanlist: 0.01, 0.02, 0.03, 0.04, 0.05 ; beta_scan = 0.0, 0.002, 0.020 ; omt_i = 3.0, omt_e = 0.0, omn_e/i = 1.0
+	-> 5: kymin_scanlist: 0.01, 0.02, 0.03, 0.04, 0.05 ; beta_scan = 0.0, 0.002, 0.020 ; omt_i = 3.0, omt_e = 1.0, omn_e/i = 1.0
+	-> 6: [Ignore - unecessary] kymin_scanlist: 0.01, 0.02, 0.03, 0.04, 0.05 ; beta_scan = 0.0, 0.002 - checking NaN values from (5)
+	-> 7: kymin_scanlist: 0.01, 0.02, 0.03, 0.04, 0.05 ; beta_scan = 0.0, 0.002, 0.010 ; checking NaN values from (1) 
+
+
+p14: Coarse beta_scan for KBM-gamma(ky) "bumps" at very low ky
+
+	-> 0: kymin_scanlist: 0.01, 0.025, 0.05, 0.1, 0.15 ; beta_scan = 0.0, 0.005, 0.035 ; omt_i = 3.0, omt_e = 0.0, omn_e = 0.0
+	-> 1: same as 0, with: omt_i = 3.0, omt_e = 1.0, omn_e = 0.0
+	-> 2: Ignore: error
+	-> 3: same as 0, with: omt_i = 3.0, omt_e = 0.0, omn_e = 1.0 
+	-> 4: same as 0, with: omt_i = 3.0, omt_e = 1.0, omn_e = 1.0 
+
+p15: Now trying linear scans with [npol_?_00gist], and varying npol (and nz0 = npol*128), and in all cases using dpdx_term = 'full_drift':
+
+	-> 0: npol = 2 ; nz = 256 ; gist***000 -> this is an npol-convergence check with run p12-scan41
+
+p16: Low gradT (omn_i=1.6) beta & ky-scan
+
+	-> 0: kymin_scanlist: 0.01, 0.02, 0.03, 0.04, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4, 0.5 ; beta_scanlist: 0.0, 0.002, 0.004, 0.006, 0.008, 0.01, 0.02, 0.03 ; gist***00 
+	-> 1: kyscanlist: 0.001, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1, 0.2, 0.3, 0.4, 0.5 ; betascan: 0.01, 0.002, 0.03 ; omt_i = 1.6 ; gist***00 
+	-> 2: Same as 1 - npol=2 & nz0=256
+	-> 3: [Discontinued] Same as 1 - npol=3 & nz0=384 - also reduced kyscanlist to: 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1
+	-> 4: Same as 1 - npol=3 & nz0=384 - nx0 = 60
+	-> 5: [Ignore - discontinued]
+	-> 6: Same as 4 - npol=3 & nz0=384 - nx0 = 29
+
+p17: New gist (made from wout from Josefine)
+
+	-> 0: same as p14-scan0 ; gista
+	-> 1: same as p13-scan1 ; gista
+	-> 2: gista - kymin_scan = 0.001, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1, 0.12, 0.14, 0.16, 0.18, 0.2, 0.22, 0.24, 0.26, 0.28, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 ; beta_scan = 0.002, 0.002, 0.03 ; omt_i = 2 (all other grads zero) - see p21sc4 for omt_i = 3 counterpart 
+	-> 3: Same as p16sc4 - with just kymin = 0.001
+
+p18: Very low kymin and omt=1.6
+	
+	-> 0: kymin_scanlist: 0.002, 0.004, 0.006, 0.008, 0.01, 0.015, 0.02, 0.025, 0.03, 0.035, 0.04, 0.045, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.8 ; beta = 0.03 ; gist***00
+	-> 1: Ignore: error
+	-> 2: kymin_scan: 0.001, 0.001, 0.5 ; beta = 0.03 ; gist***00  
+	-> 3: Ignore: quick test
+	-> 4: kymin_scanlist: 0.001, 0.002, 0.003, 0.004, 0.005, 0.01, 0.025, 0.03, 0.05, 0.1 ; beta = 0.035 ; gist***00
+	-> 5: Ignore: unfinished
+	-> 6: Continuation of p19sc13 (which stopped at kymin=0.12)
+
+p19: Trying sim with same gradient regime as McKinney 2021, figure 4
+	
+	-> 0: kymin_scanlist: 0.001, 0.01, 0.02, 0.03, 0.04, 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 ; beta: 0.0048 ; gist***00
+	-> 1: Ignore: error
+	-> 2: Ignore: error
+	-> 3: Ignore: error
+	-> 4: Same as 0, with longer simtimelim (500 -> 1000) 
+	-> 5: Same as 4, with omt_i = 2, and other gradients zero
+	-> 6: Ignore: error 
+	-> 7: Same as 5, with beta = 0.001 
+	-> 8: Same as 5, with beta = 0.000 - didn't run 
+	-> 9: Same as 5, with beta = 0.010
+	-> 10: Same as 5, with beta = 0.020 and higher resolution in ky (between ky = 0.05 -> 0.3)
+	-> 11: Same as 10, with beta = 0.030 
+	-> 12: Ignore: unfinished
+	-> 13: Broad scan in ky and beta - gist**00 - omt_i = 3 ; omt_e = omn_e = omn_i = 1
+	-> 14: kyscan: 0.01, 0.02, 0.03, 0.04, 0.05, 0.5, 0.6, 0.7, 0.8, 0.9 ; betascan: 0.002, 0.002, 0.03  ; 00KJM - omt_i = 2 ; omt_e = 0 ; omn = 2
+	-> 15: kyscan: 0.005, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.5, 0.6, 0.7, 0.8, 0.9 ; betascan: 0.001, 0.0005, 0.008 ; 00KJM - omt_i = 2 ; omt_e = 0 ; omn = 2
+
+p20: Same as p19-scan5 (unless otherwise stated), but with more fine grained kyscans
+
+	-> 0: kymin_scanlist: 0.001, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1, 0.12, 0.14, 0.16, 0.18, 0.2, 0.3 ; beta = 0.0048 ; omt_i = 2
+	-> 1: kymin_scanlist: 0.001, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1, 0.12, 0.14, 0.16, 0.18, 0.2, 0.3 ; beta = 0.0048 ; omt_i = 3
+	-> 2: kymin_scan: 0.2, 0.01, 0.4 ; beta = 0.0048 ; omt_i = 3   
+	-> 3: Ignore: error
+	-> 4: convergence check (for low ky) on  scan 1 and 2 combined (nx0: 29 -> 60) => Converged
+	-> 5: Run didn't complete - kymin_scanlist = 0.001, 0.005, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1, 0.12, 0.14, 0.16, 0.18, 0.2, 0.22, 0.24, 0.26, 0.28, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 ; beta_scan = 0.002, 0.002, 0.03 ; omt_i = 3 
+	-> 6: Same as 5 - given longer wallclock time
+	-> 7: Broad ky and beta scan ; omt_i =4 ; KJM-gist***00
+	-> 8: 00kjm_shear_0.1 ; omt_i = 3 ; kyscan: 0.05, 0.05, 0.9 ; betascan: 0.002, 0.002, 0.03 
+	-> 9: 00kjm_shear_0.05 ; omt_i = 3 ; kyscan: 0.05, 0.05, 0.9 ; betascan: 0.002, 0.002, 0.03 
+	-> 10: 00kjm_shear_0.15 ; omt_i = 3 ; kyscan: 0.05, 0.05, 0.9 ; betascan: 0.002, 0.002, 0.03 
+
+p21: Broad ky and beta scans (beta > 0)
+
+	-> 0: Ignore: error
+	-> 1: Run didn't complete - kymin_scan = 0.001, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1, 0.12, 0.14, 0.16, 0.18, 0.2, 0.22, 0.24, 0.26, 0.28, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 ; beta_scan = 0.002, 0.002, 0.03 ; omt_i = 3 (all other grads zero) 
+	-> 2: Same as 1, but given more wallclock time to complete ; omt_i = 2
+	-> 3: Ignore: error
+	-> 4: gista - same as 1 (omt_i = 3, given 24 hours wallclock time) - see p17sc2 for omt_i = 2 counterpart
+	-> 5: kjm00_s0_0.25 ; broad scan  
+	-> 6: kjm00_s0_0.25 ; broad scan starting at kymin = 0.001; nx0 = 60 
+	-> 0: kjm00_s0_0.25 ; broad scan starting at kymin = 0.02 ; nx0 = 60
+
+p22:
+	-> 0: Same as p21sc1, with beta = 0.0 - didn't work
+	-> 1: Also didn't work - ky = 0.001 too low when beta = 0?
+	-> 2: Test - increased kymin: kymin_scan = 0.1, 0.1, 0.9 ; betascan = 0.0, 0.0001, 0.0001 ; omt_i = 3 
+	-> 3: Same as p20sc5, but without kymin values < 0.01, and only using beta = 0.0 ; omt_i = 3 
+	-> 4: Same as p21sc2, but without kymin values < 0.01, and only using beta = 0.0 ; omt_i = 2 
+	-> 5: Same as p21sc2, but without kymin values < 0.01, and only using beta = 0.0 ; omt_i = 1.6 
+	-> 6: gista - Broad ky and beta scan - omt_i = 4
+	-> 7: kjm00_s0_0.75 ; broad scan  
+
+p23:
+	-> 0: kyscan: 0.001, 0.001, 0.03 ; beta = 0.02 ; omt_i = 3.0 ; gist***00  
+	-> 1: kyscan: 0.001, 0.001, 0.05 ; beta = 0.02 ; omt_i = 1.6 ; gist***00  
+	-> 2: Ignore
+	-> 3: kyscan: 0.2, 0.1, 0.9 ; betascan: 0.002, 0.002, 0.03 ; omt_i = 2.0 ; gista 
+	-> 4: Broad ky and beta scan ; omt_i = 2 ; gista
+	-> 5: Ignore 
+	-> 6: Broad ky and beta scan ; omt_i = 3 ; TEH
+
+p24:
+	-> 0: KJM00 - kyscan = 0.001, 0.005, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1, 0.12, 0.14, 0.16, 0.18, 0.2, 0.22, 0.24, 0.26, 0.28, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9 ; beta_scan = 0.002, 0.002, 0.03 ; omt_i = 1.6 
+	-> 1: Same as 0 - kymin_scan = [0.6, 0.9] 
+	-> 2: Ignore
+	-> 3: Ignore 
+	-> 4: kyscan: 0.2, 0.1, 0.9 ; betascan: 0.002, 0.002, 0.03 ; omt_i = 3.0 ; gista 	
+	-> 5: Broad ky and beta scan ; omt_i = 3 ; EIM
+
+p25:
+	-> 0: Same as p24sc0 - with gista (omt_i = 1.6) 
+
+p26: 
+	-> 0: Discontinued (identical to p21sc4)
+        -> 1: Broad ky and beta scan ; omt_i =1.6 ; gistb
+
+p27:
+	-> 0: Discontinued (identical to p17sc2) 
+        -> 1: Broad ky and beta scan ; omt_i =2 ; gistb
+
+p28:
+	-> 0: Ignore: incomplete - Broad ky and beta scan ; omt_i =3 ; gistb
+	-> 0: Broad ky and beta scan ; omt_i =4 ; gistb
+
+p30:
+	-> 0: Ignore
+	-> 1: gista ; omt_i = 2 ; kyscan: 0.6, 0.1, 0.9 ; betasca: 0.002, 0.002, 0.03
+
+p31:
+	-> 0: Ignore 
+	-> 1: Ignore 
+	-> 2: gista ; omt_i = 3 ; kyscan: 0.6, 0.1, 0.9; betascan: 0.002, 0.002, 0.03  
+	-> 3: ild_shear_0.1 ; omt_i = 3 ; kyscan: 0.05, 0.05, 0.25 ; betascan: 0.002, 0.002, 0.03 
+	-> 4: ild_shear_0.1 ; omt_i = 3 ; kyscan: 0.05, 0.05, 0.9 ; betascan: 0.002, 0.002, 0.03 ; nx0 = 60
+	-> 5: Ignore
+	-> 6: Same as 4 - kymin = 0.3
+	-> 7: Same as 4 - kymin = 0.35
+
+*********************************************************************************************************************
+
+TEM simulations - to create more data for CDG-proxy
+
+p32:
+	-> 0: Test TEM sim - omn = 6 ; kyscan = 0.2, 0.1, 1.6 ; kjm00
+	-> 1: Test TEM sim - omn = 6 ; kyscan = 1.6, 0.1, 3.0 ; kjm00
+	-> 2: TEM - kyrho = 2.8 ; omn_scan: 0.1, 0.1, 3.0 ; kjm00 
+	-> 3: Ignore: error 
+	-> 4: TEM - kyscan: 0.4,0.6,0.8,1.0,1.2,2.0,3.0 ; omn_scan: 0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,1.2,1.4,1.6,1.8,2.0,2.2,2.4,2.6,2.8,3.0,4.0,5.0,6.0 ; kjm00
+
+*********************************************************************************************************************
+
+Reusing old problem files:
+
+p01: Linear KBM sim in KJM 
+	
+	-> 0: KJM-00gist - omt_i_e = 1.6 ; omn = 0 ; kyscan = [0.05, 0.05, 0.8] ; betascan = [0.000, 0.001, 0.005] 
+	-> 1: KJM-00gist - omt_i_e = 1.6 ; omn = 0 ; kyscan = [0.05, 0.05, 0.8] ; beta = 0.000
+
+p02: Fully consistent linear KBM sim in KJM - reproducing Fig.10 in Aley 2018 [same as p01 - just w/o ES starting point, only EM]
+	
+	-> 0: KJM-00gist - omt_i_e = 2 ; omn = 0 ; kyscan = [0.05, 0.05, 0.8] ; betascan = [0.001, 0.001, 0.005] 
+	-> 1: KJM-10gist - omt_i_e = 2 ; omn = 0 ; kyscan = [0.05, 0.05, 0.8] ; betascan = [0.006, 0.001, 0.01] 
+	-> 2: KJM-20gist - omt_i_e = 2 ; omn = 0 ; kyscan = [0.05, 0.05, 0.8] ; betascan = [0.011, 0.001, 0.02] 
+	-> 3: KJM-45gist - omt_i_e = 2 ; omn = 0 ; kyscan = [0.05, 0.05, 0.8] ; betascan = [0.021, 0.001, 0.03] 
+	-> 4: KJM-55gist - omt_i_e = 2 ; omn = 0 ; kyscan = [0.05, 0.05, 0.8] ; betascan = [0.03, 0.001, 0.035] 
+
+p03: Single beta - high resolution kyscans at omt_i = 1.6 - vacuum equilibrium
+
+	-> 0: KJM-00gist - kyscanlist = 0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.008, 0.009, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1, 0.15; beta = 0.016  
+	-> 1: KJM-00gist - kyscanlist = 0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.008, 0.009, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1, 0.15; beta = 0.016 ; omn = 0.16 
+	-> 2: KJM-00gist - kyscanlist = 0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.008, 0.009, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1, 0.15; beta = 0.016 [nx0 = 60] 
+	-> 3: KJM-00gist - kyscanlist = 0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.008, 0.009, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1, 0.15; beta = 0.016 ; omn = 0.16 [nx0 = 60] 
+
+p04: Single beta - high resolution kyscans at omt_i = 1.6 - non-vacuum equilibrium
+
+	-> 0: KJM-20gist - kyscanlist = 0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.008, 0.009, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1, 0.15; beta = 0.016  
+	-> 1: KJM-20gist - kyscanlist = 0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.008, 0.009, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1, 0.15, 0.2, 0.25; beta = 0.011 ; omt_i = 1.6 ; [nx0 = 60 ; simtimelim = 2000] 
+	-> 2: KJM-20gist - kyscanlist = 0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.008, 0.009, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1, 0.15, 0.2, 0.25; beta = 0.011 ; omt_i = 1.6 ; [nx0 = 60 ; simtimelim = 2000 ; npol = 2 ; nz0 = 256] 
+
+p05: Broad scan with higher nx0 resolution (nx0: 30 -> 60)
+
+	-> 0: [INCOMPLETE] KJM00 - kyscan = 0.001 ; beta_scan = 0.001, 0.001, 0.02 ; omt_i = 1.6 
+	-> 1: [INCOMPLETE] KJM00 - kyscan = 0.002, ; beta_scan = 0.001, 0.001, 0.02 ; omt_i = 1.6 
+	-> 2: [INCOMPLETE] KJM00 - kyscan = 0.003-0.040, ; beta_scan = 0.001, 0.001, 0.02 ; omt_i = 1.6 
+	-> 3: [INCOMPLETE] KJM00 - kyscan = 0.050-, ; beta_scan = 0.001, 0.001, 0.02 ; omt_i = 1.6 
+	-> 4: KJM-20gist - kyscanlist = 0.001, 0.002, 0.003, 0.004, 0.005, 0.006, 0.007, 0.008, 0.009, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1, 0.15, 0.2, 0.25; beta = 0.011 ; omt_i = 1.6 ; [simtimelim = 2000 ; npol = 2 ; nz0 = 256] 
+
+p06: Eigenvalue solver runs
+
+	-> 0: [Ignore - didn'r run] KJM20 - evalue-solver test - n_ev = 10 (number of modes) ; taumfn = 0.3 ; beta = 0.011
+	-> 1: KJM20 - evalue-solver test - n_ev = 3 (number of modes) ; taumfn = 0.3 ; beta = 0.011 [Included MJ's corrections/ideas]
+
+p07: Broad ky scan - low resolution - looking for switch to ITG - consistent sim with beta=0.011 and using KJM20gist
+
+*****************************************************************************************************************************
+
+p08: Nonlinear KBM test - hyp_z = 1 
+
+	-> nky0 = 48 ; omt_i = 3.0 ; bpar = T ; hyp_z = 1 ; 20gist ; beta = 0.011 
+
+
+p11: Nonlinear KBM 
+	
+	-> nky0 = 48 ; omt_i = 3.0 ; bpar = T ; 20gist ; beta = 0.011
+	-> Continuing sim
+
+
+p33: Nonlinear KBM - bpar = F
+
+	-> nky0 = 36 ; omt_i = 3.0 ; bpar = F ; 20gist ; beta = 0.011
+
+
+p38: Nonlinear KBM - hyp_z = 16 ; 20gist ; beta = 0.011 
+
+	-> nky0 = 48 ; omt_i = 3.0 ; bpar = T ; hyp_z = 16 ; 20gist ; beta = 0.011
+
+
+p39: Nonlinear KBM - hyp_z = 16 ; 45gist ; beta = 0.024 
+
+	-> nky0 = 48 ; omt_i = 3.0 ; bpar = T ; hyp_z = 16 ; 45gist ; beta = 0.024
+
+
+p40: Nonlinear KBM - omt_i = 1.6 ; hyp_z = 16 ; 20gist ; beta = 0.011  
+
+	-> nky0 = 48 ; omt_i = 1.6 ; bpar = T ; hyp_z = 16 ; 20gist ; beta = 0.011
+
+p41: Nonlinear KBM - omt_i = 1.6 ; hyp_z = 16 ; 45gist ; beta = 0.024 
+
+	-> nky0 = 48 ; omt_i = 1.6 ; bpar = T ; hyp_z = 16 ; 45gist ; beta = 0.024
+
+p42: Nonlinear KBM - omt_i = 1.6 ; hyp_z = 32 ; 20gist ; beta = 0.011 
+
+	-> nky0 = 56 ; omt_i = 1.6 ; bpar = T ; hyp_z = 32 ; 20gist ; beta = 0.011
+
+p43: Same as p42 (double checking p42 - as I continued p42 mid-simulation accidentally)
+
+p44: Nonlinear KBM - omt_i = 1.6 ; hyp_z = 32 ; 20gist ; beta = 0.011 
+
+	-> nky0 = 88 ; kymin = 0.01 ; omt_i = 1.6 ; bpar = T ; hyp_z = 32 ; 20gist ; beta = 0.011
+
+
+
+
+
+****************************************************************************************************************************
+
+Shear tests:
+
+p34     
+	-> 00: KJM00 low shear = shat = -0.05
+	-> 01: KJM00 mid shear = shat = -0.10
+
+p35
+	-> 00: KJM00 high shear = shat = -0.15
+
+
+***************************************************************************************************************************
+
+Retrying TEH and EIM
+
+p36 - TEH ; kyscan: 0.05, 0.05, 0.9 ; betascan: 0.002, 0.002, 0.03 ; omt_i = 1.6 (spread over different scanfiles - ignore sc2) 
+
+p37 - EIM ; kyscan: 0.05, 0.05, 0.9 ; betascan: 0.002, 0.002, 0.03 ; omt_i = 1.6 (spread over different scanfiles - ignore sc2)
+

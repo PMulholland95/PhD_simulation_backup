@@ -1,0 +1,5 @@
+Here, we are using KJM gist***0.0, and varying the value of npol (and nz = 128*npol) to see if our results are converged when going from npol = 1 -> 2.
+
+If they are not converged (i.e., if the % difference of growth rates is > 10%), then we will proceed to npol = 3, and see if that is converged with npol = 2. 
+
+We will discuss the outcome here. 

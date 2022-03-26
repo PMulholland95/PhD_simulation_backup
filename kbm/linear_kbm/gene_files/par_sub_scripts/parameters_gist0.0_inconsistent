@@ -1,0 +1,112 @@
+&parallelization
+/
+
+&box
+n_spec =   2	 ! # species
+nx0    =   15	 ! # radial grid pts
+nky0   =   1	 ! # kys
+nz0    =   128	 ! # parallel grid pts
+nv0    =   48	 ! # vpar grid points
+nw0    =    8	 ! # mu grid points
+
+lx    =  125.628     ! box length in x
+kymin =     0.10     !
+lv    =     3.00     ! domain in vpar
+lw    =     9.00     ! domain in mu
+/
+
+&in_out
+! where to write output files ?
+diagdir = '/marconi_scratch/userexternal/pmulholl/p12/scanfiles0018' 
+
+! start from checkpoint file ?
+read_checkpoint = F
+
+! how often to write out various files
+istep_field  =    100
+istep_mom    =    400
+istep_nrg    =     10
+istep_energy =    100
+istep_vsp   =     500
+istep_schpt =    5000
+/
+
+&general
+!type of operation
+nonlinear =  F 
+
+!choice of algorithms will be detected automatically and written
+!to (output) parameters.dat; Uncomment to use a fixed setup
+!perf_vec  =  1 1 1 1 1 1 1 1 1
+
+!Calculate time step; if true, dt_max will be calculated by SLEPC
+!or if not available *approximated* by CFL limit
+calc_dt    = .t.
+
+!set dt_max if calc_dt = .f.
+!dt_max     =   0.3850E-01 !max. linear time step
+
+!simulation stop criteria
+timelim    =      7200	  ! wallclock limit in sec
+!ntimesteps =      1000000 ! total # timesteps
+simtimelim =      500   ! simulation time limit in L_ref/c_ref
+
+beta       =    0.00    !scan: 0.0,0.005,0.035
+debye2     =    0.00
+bpar       =    T
+
+collision_op = 'none'   !'landau','pitch-angle',...
+coll       =    0.00
+
+zeff       =    1.00	!relevant to collisions in single-ion cases
+
+!initial condition, by default 'alm'/'ppj' for linear/nonlinear runs
+!init_cond = 'ppj'
+
+!hyperdiffusions
+hyp_z =   8.00 !set to -1 for automatic adaptation
+hyp_v =   0.20 !set to zero if collisions are active
+
+!Uncomment following line to activate LES methods in perp. directions
+!(recommended to avoid spectral pile-ups)
+!GyroLES = T
+
+/
+
+&geometry
+magn_geometry = 'gist' !geometry model
+geomdir  =   '/marconi/home/userexternal/pmulholl/gene_dir/prob12/gist_geo'
+geomfile =   'gist_gene_tube_wout.W7X0.0'
+dpdx_term  =    'full_drift'
+dpdx_pm    =    -1
+/
+
+&species
+name   = 'i'
+omn    =    0.0    !L_ref/L_n
+omt    =    2.0    !L_ref/L_T
+
+mass   =    1.000    !mass in units of m_ref
+temp   =    1.000    !temperature in units of T_ref
+dens   =    1.000    !density in units of n_ref
+charge =  1 	     !charge in elementary charge units
+/
+
+
+!set n_spec = 2 to consider electrons
+&species
+name   = 'e'
+omn    =    0.0     !L_ref/L_n
+omt    =    2.0     !L_ref/L_T
+
+mass   =    0.0005447 !mass in units of m_ref
+temp   =    1.000     !temperature in units of T_ref
+dens   =    1.000     !density in units of n_ref
+charge =  -1 	      !charge in elementary charge units
+
+
+
+&scan
+scan_dims = 8
+par_in_dir = '/marconi_scratch/userexternal/pmulholl/p12/scanfiles0018/in_par'
+/

@@ -1,0 +1,28 @@
+Keeping track of different attempts of KBM simulations - attempting to reproduce linear results from Aleynikova 2018
+
+#---------------> First try
+
+- reran full KBM simulation (all beta values - 4 gist files)
+
+#---------------> Second try
+
+- simulated first and last set of beta values (lowest and highest beta sets - first and last gist file)
+- used higher nkxo (3 -> 15)
+
+#---------------> Third try
+
+- only simulated last set of beta values (highest beta set - final gist file)
+- used increased nkx0 resolution and hyp_z (15 and 8?)
+
+#---------------> Fourth try 
+#*** Can ignore: not likely to find KBMs at this kyrho ***
+
+- holding kyrho constant at 0.8
+- only simulated last set of beta values (highest beta set - final gist file)
+- used increased nkx0, nv0, and hyp_z (15, 96 & 8)
+
+#---------------> Fifth try
+
+- using gist file corresponding to beta_equil=0
+- scan over beta_kinetic=[0%, 3%]
+- scanned for kyrho=0.1,0.8

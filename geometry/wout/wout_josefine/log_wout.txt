@@ -1,0 +1,7 @@
+#Log to keep track of differnt wout files used
+
+wouta = wout-0982_0929_0752_0743_-0637_+0663-01.nc => ILD configuration (ref. configuration F (SE): low-shear)
+
+woutb = wout-0989_1010_1114_1124_+0312_-0625-01-00beta.nc => FIS configuration (ref. configuration G: inward-shifted, OP1.2 configuration)
+
+woutc = wout-1000_0971_0923_0923_-0403_+0403-01-00beta.nc => DKH configuration (ref. configuration H: outward-shifted)
