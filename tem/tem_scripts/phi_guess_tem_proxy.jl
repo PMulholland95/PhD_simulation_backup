@@ -4,7 +4,7 @@ using DelimitedFiles, Trapz, Kinetic, LaTeXStrings, SpecialFunctions
 
 # Extract geometry from gist: B, gyy, κ
 
-gist = readdlm("gist_d3d_test.dat", skipstart=0);
+gist = readdlm("start_data/gist_d3d_test.dat", skipstart=0);
 
 B = gist[:,4];
 B = convert(Array{Float64}, B);
@@ -156,7 +156,7 @@ end
 
 # Now, import relevant data from scan.log
 
-dsc = readdlm("d3d_scan.log");
+dsc = readdlm("start_data/d3d_scan.log");
 
 n = 11
 q0 = 2.5655027
