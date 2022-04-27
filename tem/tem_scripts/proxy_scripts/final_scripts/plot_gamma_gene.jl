@@ -4,7 +4,7 @@ function plotGamma(scanlog::String,
 		   saveplot::String; 
 		   n = 11,
                    resolution=(4000,2000),
-                   fontsize=50,
+                   fontsize=60,
 		   linewidth=15,
 		   lw2=5,
                    )
@@ -38,10 +38,10 @@ function plotGamma(scanlog::String,
 	fontsize_theme = Theme(fontsize = fontsize)
 	set_theme!(fontsize_theme)
 
-	ax1 = Axis(fig[1,1], title = L"k_y \rho = 0.6", xlabel = L"a / L_n", ylabel = L"γ / (c_s/a)", xminorticksvisible = true, yminorticksvisible = true, xticksize = 40, yticksize = 40, xminorticksize = 20, yminorticksize = 20)
-	ax2 = Axis(fig[1,2], title = L"k_y \rho = 0.8", xlabel = L"a / L_n", ylabel = L"γ / (c_s/a)", xminorticksvisible = true, yminorticksvisible = true, xticksize = 40, yticksize = 40, xminorticksize = 20, yminorticksize = 20)
-	ax3 = Axis(fig[2,1], title = L"k_y \rho = 1.0", xlabel = L"a / L_n", ylabel = L"γ / (c_s/a)", xminorticksvisible = true, yminorticksvisible = true, xticksize = 40, yticksize = 40, xminorticksize = 20, yminorticksize = 20)
-	ax4 = Axis(fig[2,2], title = L"k_y \rho = 1.2", xlabel = L"a / L_n", ylabel = L"γ / (c_s/a)", xminorticksvisible = true, yminorticksvisible = true, xticksize = 40, yticksize = 40, xminorticksize = 20, yminorticksize = 20)
+	ax1 = Axis(fig[1,1], title = L"k_y \rho = 0.6", xlabel = L"a / L_n", ylabel = L"ω,γ / (c_s/a)", xminorticksvisible = true, yminorticksvisible = true, xticksize = 40, yticksize = 40, xminorticksize = 20, yminorticksize = 20)
+	ax2 = Axis(fig[1,2], title = L"k_y \rho = 0.8", xlabel = L"a / L_n", ylabel = L"ω,γ / (c_s/a)", xminorticksvisible = true, yminorticksvisible = true, xticksize = 40, yticksize = 40, xminorticksize = 20, yminorticksize = 20)
+	ax3 = Axis(fig[2,1], title = L"k_y \rho = 1.0", xlabel = L"a / L_n", ylabel = L"ω,γ / (c_s/a)", xminorticksvisible = true, yminorticksvisible = true, xticksize = 40, yticksize = 40, xminorticksize = 20, yminorticksize = 20)
+	ax4 = Axis(fig[2,2], title = L"k_y \rho = 1.2", xlabel = L"a / L_n", ylabel = L"ω,γ / (c_s/a)", xminorticksvisible = true, yminorticksvisible = true, xticksize = 40, yticksize = 40, xminorticksize = 20, yminorticksize = 20)
 
 	#lines!(ax1, gradn, qpr1, color = :green)
 	scatter!(ax1, gradn, gam1, color = :green)

@@ -1,28 +1,27 @@
 using DelimitedFiles, CairoMakie, LaTeXStrings
 
 function plotOmegaTemProxy(scanlog::String, 
-			   gsave::String, 
-		           bansave::String, 
-			   saveplot::String; 
-			   n = 11,
+			   proxyoutput::String, 
+			   saveplot::String,
+			   n::Int64,
+			   zpn::Int64;
                            resolution=(4000,2000),
-                           fontsize=50,
+                           fontsize=60,
 			   linewidth=15,
 			   lw2=5,
-			   title= L"Growth \; rates and frequencies",
                           )
 
-	gsc = readdlm(scanlog);
-	n=11
+	gsc = readdlm(scanlog, skipstart=1);
 	gradn = gsc[1:n,3]
 	gradn = convert(Array{Float64}, gradn)
-
+	
+	g = "g"
 	dat = ".dat"
 
 	gn = []
 
 	for i in 1:4
-		push!(gn, string(gsave,i,dat))
+		push!(gn, string(proxyoutput,g,i,dat))
 	end
 
 	gn1 = vec(readdlm(gn[1]));
@@ -37,10 +36,12 @@ function plotOmegaTemProxy(scanlog::String,
 	qpr4 = vec(readdlm("saved_data/qpr4.dat"));
 	=#
 
+	b = "ban"
+
 	ban = []
 
 	for i in 1:4
-		push!(ban, string(bansave,i,dat))
+		push!(ban, string(proxyoutput,b,i,dat))
 	end
 
 	ban1 = vec(readdlm(ban[1]));
@@ -48,15 +49,20 @@ function plotOmegaTemProxy(scanlog::String,
 	ban3 = vec(readdlm(ban[3]));
 	ban4 = vec(readdlm(ban[4]));
 
+	k1 = ["0.6","0.8"]
+	k2 = ["0.8","1.0"]
+	k3 = ["1.0","1.2"]
+	k4 = ["1.2","1.4"]
+	
 	fig = Figure(resolution=resolution)
 
 	fontsize_theme = Theme(fontsize = fontsize)
 	set_theme!(fontsize_theme)
 
-	ax1 = Axis(fig[1,1])
-	ax2 = Axis(fig[1,2])
-	ax3 = Axis(fig[2,1])
-	ax4 = Axis(fig[2,2])
+	ax1 = Axis(fig[1,1], title = latexstring(L"k_y \rho =",k1[zpn]), xlabel = L"a / L_n", ylabel = L"ω / (c_s/a)", xminorticksvisible = true, yminorticksvisible = true, xticksize = 40, yticksize = 40, xminorticksize = 20, yminorticksize = 20)
+	ax2 = Axis(fig[1,2], title = latexstring(L"k_y \rho =",k2[zpn]), xlabel = L"a / L_n", ylabel = L"ω / (c_s/a)", xminorticksvisible = true, yminorticksvisible = true, xticksize = 40, yticksize = 40, xminorticksize = 20, yminorticksize = 20)
+	ax3 = Axis(fig[2,1], title = latexstring(L"k_y \rho =",k3[zpn]), xlabel = L"a / L_n", ylabel = L"ω / (c_s/a)", xminorticksvisible = true, yminorticksvisible = true, xticksize = 40, yticksize = 40, xminorticksize = 20, yminorticksize = 20)
+	ax4 = Axis(fig[2,2], title = latexstring(L"k_y \rho =",k4[zpn]), xlabel = L"a / L_n", ylabel = L"ω / (c_s/a)", xminorticksvisible = true, yminorticksvisible = true, xticksize = 40, yticksize = 40, xminorticksize = 20, yminorticksize = 20)
 
 	#lines!(ax1, gradn, qpr1, color = :green)
 	scatter!(ax1, gradn, gn1, color = :blue)
