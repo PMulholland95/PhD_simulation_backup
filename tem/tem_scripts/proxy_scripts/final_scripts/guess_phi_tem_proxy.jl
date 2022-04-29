@@ -3,48 +3,72 @@
 using DelimitedFiles, Trapz, Kinetic, LaTeXStrings, SpecialFunctions
 
 # Extract geometry from gist: B, gyy, κ
+# Safety factors: d3d, ncsx, w7xsc, w7xhm, w7xlm, kjm, dkh, dkm, dks
 
-function OmegaTemProxyPhiGuess(gistread::String,
-		       	       scanlog::String,
-		       	       savefolder::String)
-		       
+function omegaTemProxyPhiGuess(gistread::String,
+		       	      scanlog::String,
+		       	      savefolder::String,
+			      sf::Int64,
+			      n::Int64,
+			      zn::Int64,
+			      zpn::Int64)
 
-	gist = readdlm(gistread, skipstart=0);
+	gist = readdlm(gistread, skipstart=13);
 
 	B = gist[:,4];
 	B = convert(Array{Float64}, B);
 	Bmax = maximum(B);
 	Bmin = minimum(B);
 
+	writedlm(string(savefolder,"B_z.dat"),B)
+
 	gyy = gist[:,3];
 	gyy = convert(Array{Float64}, gyy);
 
-	κ = gist[:,5];
+	writedlm(string(savefolder,"gyy_z.dat"),gyy)
+
+	kapn = [5,6]	
+
+	κ = gist[:,kapn[zpn]];
 	κ = convert(Array{Float64}, κ);
 
+	writedlm(string(savefolder,"kappa_z.dat"),κ)
+
 	mydpdx = 0;
-	q = 1;
 	s = 0.5;
 
-	# Predicting the mode structure
-
+	#Predicting the mode structure
+	
 	bk = B + κ;
 	inbk = 1 ./bk;
 	inbkmx = maximum(inbk);
-
+	
 	ϕGuessNorm = inbk/inbkmx;
-
+	
 	ϕ = ϕGuessNorm;
+	
+	pmatempty = Array{Vector{Float64}}(undef, n, 4)
+
+	for i in eachindex(pmatempty)
+	pmatempty[i] = ϕ
+	end 
+
+	pmat = pmatempty
+
+	z = range(-pi, pi, length=64)
 
 	# Mode Frequency Proxy
 
-	# λ = 1/Bmax:0.001:1/Bmin
 	λ = range(1/Bmax, 1/Bmin, length=1000);
 	l = 1:1:length(B);
+	m = 1:1:zn;
+
+	kyall = [[0.6,0.8,1.0,1.2], [0.8,1.0,1.2,1.4]]
+	gradall = [[0.3,0.6,0.8,1.0,1.2,1.5,2.0,3.0,4.0,5.0,6.0], [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,1.5,2.0,2.5,3.0,4.0,5.0,6.0]]
 
 	function Well(λ::Float64)
 
-		map(x->heaviside(1/λ - B[x]),l)
+		map(x->heaviside(1 ./λ .- B[x]),l)
 	end
 
 	well = map(x->Well(x), λ)
@@ -53,32 +77,39 @@ function OmegaTemProxyPhiGuess(gistread::String,
 
 	function BounceTime(λ::Float64)
 
-		real(trapz((l), Well(λ)./sqrt.(Complex.(1 .- λ*B))))
+		real(trapz((l), Well(λ)./sqrt.(Complex.(1 .- λ .* B))))
 	end
 
 	τ = map(x->BounceTime(x), λ);
+	replace!(τ, NaN => 0)
 
 	# τreal = real(τ);
 	# τimag = imag(τ);
 
-	function PhiBounce(λ::Float64)
+	function PhiBounce(λ::Float64, kyρ, gradn)
 
-		(1 ./BounceTime(λ)).*real(trapz((l), (Well(λ).*ϕ)./sqrt.(Complex.(1 .- λ*B)))) 
+		kn = indexin(kyρ, kyall[zpn])
+		gn = indexin(gradn, gradall[zpn])
+
+		(1 ./BounceTime(λ)).*real(trapz((l), (Well(λ).* pmat[gn[1],kn[1]])./sqrt.(Complex.(1 .- λ .* B)))) 
 	end
 
-	ϕBounceList = map(x->PhiBounce(x), λ);
-	ϕBL = ϕBounceList
+	function ϕBL(kyρ, gradn)
 
-	BounceIntList = (ϕBL.^2).*τ 
-	BIL = BounceIntList
-	replace!(BIL, NaN => 0)
+		ϕBounceList = map(x->PhiBounce(x, kyρ, gradn), λ)
+	end
 
+	function BIL(kyρ, gradn)
+
+		BounceIntList = (ϕBL(kyρ, gradn) .^2).*τ
+		replace!(BounceIntList, NaN => 0)
+	end
 
 	# Procedure for writing ω_d (bounce part)
 
 	function Gbounce(λ::Float64)
 
-		(1 ./BounceTime(λ)).*real(trapz((l), (Well(λ).*κ).*(1 .- (λ*B./2))./sqrt.(Complex.(1 .- λ*B))))
+		(1 ./BounceTime(λ)).*real(trapz((l), (Well(λ).*κ).*(1 .- (λ .* B ./2))./sqrt.(Complex.(1 .- λ .* B))))
 	end
 
 	GBounceList = map(x->Gbounce(x), λ);
@@ -95,40 +126,53 @@ function OmegaTemProxyPhiGuess(gistread::String,
 	function Γ0(kyρ::Float64) 
 		
 		besseli.(0, b(kyρ)) .* exp.(-b(kyρ))
-
 	end
 
 	function Γ1(kyρ::Float64) 
 		
 		besseli.(1, b(kyρ)) .* exp.(-b(kyρ))
-
 	end
 
-	function a1(kyρ::Float64)
+	function a1(kyρ, gradn)
 
-		(trapz((l), (2 .- Γ0(kyρ)).*(ϕ.^2).*(1 ./B)))
+		kn = indexin(kyρ, kyall[zpn])
+		gn = indexin(gradn, gradall[zpn])
+
+		(trapz((l), (2 .- Γ0(kyρ)) .* (pmat[gn[1],kn[1]] .^2) .* (1 ./B)))
 	end
 
-	a2 = 0.5 .* (trapz((λ), BIL))
+	function a2(kyρ, gradn)
+		
+		0.5 .* (trapz((λ), BIL(kyρ, gradn)))
+	end
 
-	function b1(kyρ, ηᵢ)
+	function b1(kyρ, gradn, ηᵢ)
 
-		(trapz((l), (Γ0(kyρ) .- ηᵢ * b(kyρ) .* (Γ0(kyρ) - Γ1(kyρ))) .* (ϕ .^2) .* (1 ./B))) 
+		kn = indexin(kyρ, kyall[zpn])
+		gn = indexin(gradn, gradall[zpn])
+
+		(trapz((l), (Γ0(kyρ) .- ηᵢ * b(kyρ) .* (Γ0(kyρ) - Γ1(kyρ))) .* (pmat[gn[1],kn[1]] .^2) .* (1 ./B))) 
 	end
 
 	function b2(kyρ, gradn)
 
-		(1/gradn) * (trapz((l), (2 * Γ0(kyρ) .- b(kyρ) .* (Γ0(kyρ) - Γ1(kyρ))) .* κ .* (ϕ .^2) .* (1 ./B))) 
+		kn = indexin(kyρ, kyall[zpn])
+		gn = indexin(gradn, gradall[zpn])
+
+		(1/gradn) * (trapz((l), (2 * Γ0(kyρ) .- b(kyρ) .* (Γ0(kyρ) - Γ1(kyρ))) .* κ .* (pmat[gn[1],kn[1]] .^2) .* (1 ./B))) 
 	end
 
 	function b3(kyρ, gradn)
 
-		(1/gradn)*(-3/2) * (trapz((λ), BIL .* GBL))
+		(1/gradn)*(-3/2) * (trapz((λ), BIL(kyρ, gradn) .* GBL))
 	end
 
 	function c1(kyρ, gradn, ηᵢ)
 		
-		(1/gradn) * (trapz((l), (2 * Γ0(kyρ) .- b(kyρ) .* (Γ0(kyρ) - Γ1(kyρ)) + ηᵢ .* (2 .* ((b(kyρ) .-1) .^2) .* Γ0(kyρ) .+ b(kyρ) .* (3 .- 2 .* b(kyρ)) .* Γ1(kyρ) )) .* κ .* (ϕ .^2) .* (1 ./B) )) 
+		kn = indexin(kyρ, kyall[zpn])
+		gn = indexin(gradn, gradall[zpn])
+
+		(1/gradn) * (trapz((l), (2 * Γ0(kyρ) .- b(kyρ) .* (Γ0(kyρ) - Γ1(kyρ)) + ηᵢ .* (2 .* ((b(kyρ) .-1) .^2) .* Γ0(kyρ) .+ b(kyρ) .* (3 .- 2 .* b(kyρ)) .* Γ1(kyρ) )) .* κ .* (pmat[gn[1],kn[1]] .^2) .* (1 ./B) )) 
 	end
 
 	function c2(kyρ, gradn, ηₑ)
@@ -138,33 +182,33 @@ function OmegaTemProxyPhiGuess(gistread::String,
 
 	# Grouping together into quadratic terms
 
-	function aquad(kyρ)
+	function aquad(kyρ, gradn)
 
-		a1(kyρ) .- a2
+		a1(kyρ, gradn) .- a2(kyρ, gradn)
 	end
 
 	function bquad(kyρ, gradn, ηᵢ)
 
-		b1(kyρ, ηᵢ) .+ b2(kyρ, gradn) .- a2 .+ b3(kyρ, gradn)
+		b1(kyρ, gradn, ηᵢ) .+ b2(kyρ, gradn) .- a2(kyρ, gradn) .+ b3(kyρ, gradn)
 	end
 
 	function cquad(kyρ, gradn, ηᵢ, ηₑ)
 
-		c1(kyρ, gradn, ηᵢ) - c2(kyρ, gradn, ηₑ)
+		c1(kyρ, gradn, ηᵢ) .- c2(kyρ, gradn, ηₑ)
 	end
 
 	function quadplus(kyρ, gradn, ηᵢ, ηₑ)
 
-		(bquad(kyρ, gradn, ηᵢ) .+ sqrt.(Complex.((bquad(kyρ, gradn, ηᵢ)).^2 + 4 .* aquad(kyρ) .* cquad(kyρ, gradn, ηᵢ, ηₑ)))) ./ (2 .* aquad(kyρ))
+		(bquad(kyρ, gradn, ηᵢ) .+ sqrt.(Complex.((bquad(kyρ, gradn, ηᵢ)).^2 + 4 .* aquad(kyρ, gradn) .* cquad(kyρ, gradn, ηᵢ, ηₑ)))) ./ (2 .* aquad(kyρ, gradn))
 
 	end
 
 	# Now, import relevant data from scan.log
 
-	gsc = readdlm(scanlog);
+	gsc = readdlm(scanlog, skipstart=1);
 
-	n = 11
-	q0 = 2.5655027
+	# Safety factors: d3d, ncsx, w7xsc, w7xhm, w7xlm, kjm, dkh, dkm, dks
+	q0 = [2.5655027, 1.8588439, 1.1185532, 1.101862399, 1.1266741, 1.10964797, 1.1086111079, 1.092305657, 1.0852873343]  
 
 	g1 = gsc[1:n,8]
 	g2 = gsc[n+1:2n,8]
@@ -179,10 +223,15 @@ function OmegaTemProxyPhiGuess(gistread::String,
 	z3 = zeros(n,1)
 	z4 = zeros(n,1)
 
-	ky1 = fill!(z1,0.6)
-	ky2 = fill!(z2,0.8)
-	ky3 = fill!(z3,1.0)
-	ky4 = fill!(z4,1.2)
+	k1 = [0.6,0.8]
+	k2 = [0.8,1.0]
+	k3 = [1.0,1.2]
+	k4 = [1.2,1.4]
+
+	ky1 = fill!(z1,k1[zpn])
+	ky2 = fill!(z2,k2[zpn])
+	ky3 = fill!(z3,k3[zpn])
+	ky4 = fill!(z4,k4[zpn])
 
 	etai = zeros(n)
 	etae = zeros(n)
@@ -197,10 +246,10 @@ function OmegaTemProxyPhiGuess(gistread::String,
 	qpr3 = real(qp3)
 	qpr4 = real(qp4)
 
-	ban1 = vec(-(q0 .* ky1 .* gradn) .* qpr1) 
-	ban2 = vec(-(q0 .* ky2 .* gradn) .* qpr2) 
-	ban3 = vec(-(q0 .* ky3 .* gradn) .* qpr3) 
-	ban4 = vec(-(q0 .* ky4 .* gradn) .* qpr4) 
+	ban1 = vec(-(q0[sf] .* ky1 .* gradn) .* qpr1) 
+	ban2 = vec(-(q0[sf] .* ky2 .* gradn) .* qpr2) 
+	ban3 = vec(-(q0[sf] .* ky3 .* gradn) .* qpr3) 
+	ban4 = vec(-(q0[sf] .* ky4 .* gradn) .* qpr4) 
 
 	qpr = "qpr"
 	ban = "ban"
@@ -220,16 +269,16 @@ function OmegaTemProxyPhiGuess(gistread::String,
 	writedlm(qprar[1],qpr1)
 	writedlm(qprar[2],qpr2)
 	writedlm(qprar[3],qpr3)
-	writedlm(qprar[4],qpr3)
+	writedlm(qprar[4],qpr4)
 
 	writedlm(banar[1],ban1)
 	writedlm(banar[2],ban2)
 	writedlm(banar[3],ban3)
-	writedlm(banar[4],ban3)
+	writedlm(banar[4],ban4)
 
 	writedlm(gar[1],g1)
 	writedlm(gar[2],g2)
 	writedlm(gar[3],g3)
-	writedlm(gar[4],g3)
+	writedlm(gar[4],g4)
 
 end

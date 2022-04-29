@@ -76,15 +76,11 @@ function omegaTemProxyPhiGene(gistread::String,
 	end 
 
 	pmat = pmatempty
-#=
-	pmat = [[ϕall[1],ϕall[12],ϕall[23],ϕall[34]] [ϕall[2],ϕall[13],ϕall[24],ϕall[35]] [ϕall[3],ϕall[14],ϕall[25],ϕall[36]] [ϕall[4],ϕall[15],ϕall[26],ϕall[37]] [ϕall[5],ϕall[16],ϕall[27],ϕall[38]] [ϕall[6],ϕall[17],ϕall[28],ϕall[39]] [ϕall[7],ϕall[18],ϕall[29],ϕall[40]] [ϕall[8],ϕall[19],ϕall[30],ϕall[41]] [ϕall[9],ϕall[20],ϕall[31],ϕall[42]] [ϕall[10],ϕall[21],ϕall[32],ϕall[43]] [ϕall[11],ϕall[22],ϕall[33],ϕall[44]]]
-=#
 
 	z = sc[1][:,1]
 
 	# Mode Frequency Proxy
 
-	# λ = 1/Bmax:0.001:1/Bmin
 	λ = range(1/Bmax, 1/Bmin, length=1000);
 	l = 1:1:length(B);
 	m = 1:1:zn;
