@@ -8,11 +8,10 @@ using DelimitedFiles, Trapz, Kinetic, LaTeXStrings, SpecialFunctions
 function omegaTemProxyPhiGuess(gistread::String,
 		       	      scanlog::String,
 		       	      savefolder::String,
-			      vn::Int64,
-			      sf::Int64)
-
-	n = [11,17]
-	zn = [44,68]
+			      sf::Int64,
+			      n::Int64,
+			      zn::Int64,
+			      zpn::Int64)
 
 	gist = readdlm(gistread, skipstart=13);
 
@@ -30,7 +29,7 @@ function omegaTemProxyPhiGuess(gistread::String,
 
 	kapn = [5,6]	
 
-	κ = gist[:,kapn[vn]];
+	κ = gist[:,kapn[zpn]];
 	κ = convert(Array{Float64}, κ);
 
 	writedlm(string(savefolder,"kappa_z.dat"),κ)
@@ -48,7 +47,7 @@ function omegaTemProxyPhiGuess(gistread::String,
 	
 	ϕ = ϕGuessNorm;
 	
-	pmatempty = Array{Vector{Float64}}(undef, n[vn], 4)
+	pmatempty = Array{Vector{Float64}}(undef, n, 4)
 
 	for i in eachindex(pmatempty)
 	pmatempty[i] = ϕ
@@ -62,7 +61,7 @@ function omegaTemProxyPhiGuess(gistread::String,
 
 	λ = range(1/Bmax, 1/Bmin, length=1000);
 	l = 1:1:length(B);
-	m = 1:1:zn[vn];
+	m = 1:1:zn;
 
 	kyall = [[0.6,0.8,1.0,1.2], [0.8,1.0,1.2,1.4]]
 	gradall = [[0.3,0.6,0.8,1.0,1.2,1.5,2.0,3.0,4.0,5.0,6.0], [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0,1.5,2.0,2.5,3.0,4.0,5.0,6.0]]
@@ -89,8 +88,8 @@ function omegaTemProxyPhiGuess(gistread::String,
 
 	function PhiBounce(λ::Float64, kyρ, gradn)
 
-		kn = indexin(kyρ, kyall[vn])
-		gn = indexin(gradn, gradall[vn])
+		kn = indexin(kyρ, kyall[zpn])
+		gn = indexin(gradn, gradall[zpn])
 
 		(1 ./BounceTime(λ)).*real(trapz((l), (Well(λ).* pmat[gn[1],kn[1]])./sqrt.(Complex.(1 .- λ .* B)))) 
 	end
@@ -136,8 +135,8 @@ function omegaTemProxyPhiGuess(gistread::String,
 
 	function a1(kyρ, gradn)
 
-		kn = indexin(kyρ, kyall[vn])
-		gn = indexin(gradn, gradall[vn])
+		kn = indexin(kyρ, kyall[zpn])
+		gn = indexin(gradn, gradall[zpn])
 
 		(trapz((l), (2 .- Γ0(kyρ)) .* (pmat[gn[1],kn[1]] .^2) .* (1 ./B)))
 	end
@@ -149,16 +148,16 @@ function omegaTemProxyPhiGuess(gistread::String,
 
 	function b1(kyρ, gradn, ηᵢ)
 
-		kn = indexin(kyρ, kyall[vn])
-		gn = indexin(gradn, gradall[vn])
+		kn = indexin(kyρ, kyall[zpn])
+		gn = indexin(gradn, gradall[zpn])
 
 		(trapz((l), (Γ0(kyρ) .- ηᵢ * b(kyρ) .* (Γ0(kyρ) - Γ1(kyρ))) .* (pmat[gn[1],kn[1]] .^2) .* (1 ./B))) 
 	end
 
 	function b2(kyρ, gradn)
 
-		kn = indexin(kyρ, kyall[vn])
-		gn = indexin(gradn, gradall[vn])
+		kn = indexin(kyρ, kyall[zpn])
+		gn = indexin(gradn, gradall[zpn])
 
 		(1/gradn) * (trapz((l), (2 * Γ0(kyρ) .- b(kyρ) .* (Γ0(kyρ) - Γ1(kyρ))) .* κ .* (pmat[gn[1],kn[1]] .^2) .* (1 ./B))) 
 	end
@@ -170,8 +169,8 @@ function omegaTemProxyPhiGuess(gistread::String,
 
 	function c1(kyρ, gradn, ηᵢ)
 		
-		kn = indexin(kyρ, kyall[vn])
-		gn = indexin(gradn, gradall[vn])
+		kn = indexin(kyρ, kyall[zpn])
+		gn = indexin(gradn, gradall[zpn])
 
 		(1/gradn) * (trapz((l), (2 * Γ0(kyρ) .- b(kyρ) .* (Γ0(kyρ) - Γ1(kyρ)) + ηᵢ .* (2 .* ((b(kyρ) .-1) .^2) .* Γ0(kyρ) .+ b(kyρ) .* (3 .- 2 .* b(kyρ)) .* Γ1(kyρ) )) .* κ .* (pmat[gn[1],kn[1]] .^2) .* (1 ./B) )) 
 	end
@@ -211,36 +210,36 @@ function omegaTemProxyPhiGuess(gistread::String,
 	# Safety factors: d3d, ncsx, w7xsc, w7xhm, w7xlm, kjm, dkh, dkm, dks
 	q0 = [2.5655027, 1.8588439, 1.1185532, 1.101862399, 1.1266741, 1.10964797, 1.1086111079, 1.092305657, 1.0852873343]  
 
-	g1 = gsc[1:n[vn],8]
-	g2 = gsc[n[vn]+1:2n[vn],8]
-	g3 = gsc[2n[vn]+1:3n[vn],8]
-	g4 = gsc[3n[vn]+1:4n[vn],8]
+	g1 = gsc[1:n,8]
+	g2 = gsc[n+1:2n,8]
+	g3 = gsc[2n+1:3n,8]
+	g4 = gsc[3n+1:4n,8]
 
-	gradn = gsc[1:n[vn],3]
+	gradn = gsc[1:n,3]
 	gradn = convert(Array{Float64}, gradn)
 
-	z1 = zeros(n[vn],1)
-	z2 = zeros(n[vn],1)
-	z3 = zeros(n[vn],1)
-	z4 = zeros(n[vn],1)
+	z1 = zeros(n,1)
+	z2 = zeros(n,1)
+	z3 = zeros(n,1)
+	z4 = zeros(n,1)
 
 	k1 = [0.6,0.8]
 	k2 = [0.8,1.0]
 	k3 = [1.0,1.2]
 	k4 = [1.2,1.4]
 
-	ky1 = fill!(z1,k1[vn])
-	ky2 = fill!(z2,k2[vn])
-	ky3 = fill!(z3,k3[vn])
-	ky4 = fill!(z4,k4[vn])
+	ky1 = fill!(z1,k1[zpn])
+	ky2 = fill!(z2,k2[zpn])
+	ky3 = fill!(z3,k3[zpn])
+	ky4 = fill!(z4,k4[zpn])
 
-	etai = zeros(n[vn])
-	etae = zeros(n[vn])
+	etai = zeros(n)
+	etae = zeros(n)
 
-	qp1 = map(x->quadplus(ky1[x],gradn[x],etai[x],etae[x]), 1:n[vn])
-	qp2 = map(x->quadplus(ky2[x],gradn[x],etai[x],etae[x]), 1:n[vn])
-	qp3 = map(x->quadplus(ky3[x],gradn[x],etai[x],etae[x]), 1:n[vn])
-	qp4 = map(x->quadplus(ky4[x],gradn[x],etai[x],etae[x]), 1:n[vn])
+	qp1 = map(x->quadplus(ky1[x],gradn[x],etai[x],etae[x]), 1:n)
+	qp2 = map(x->quadplus(ky2[x],gradn[x],etai[x],etae[x]), 1:n)
+	qp3 = map(x->quadplus(ky3[x],gradn[x],etai[x],etae[x]), 1:n)
+	qp4 = map(x->quadplus(ky4[x],gradn[x],etai[x],etae[x]), 1:n)
 
 	qpr1 = real(qp1)
 	qpr2 = real(qp2)

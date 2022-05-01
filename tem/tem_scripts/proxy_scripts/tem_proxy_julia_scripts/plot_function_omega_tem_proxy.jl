@@ -4,7 +4,8 @@ function plotOmegaTemProxy(scanlog::String,
 			   proxyoutput::String, 
 			   saveplot1::String,
 			   saveplot2::String,
-			   vn::Int64;
+			   n::Int64,
+			   zpn::Int64;
                            resolution=(4000,2000),
                            fontsize=60,
 			   linewidth=15,
@@ -12,8 +13,6 @@ function plotOmegaTemProxy(scanlog::String,
 			   markersize=40,
 			   ms2=20,
 			   lw=5)
-
-	n = [11,17]
 
 	B = vec(readdlm(string(proxyoutput,"B_z.dat")))
 	B = convert(Array{Float64}, B)
@@ -25,7 +24,7 @@ function plotOmegaTemProxy(scanlog::String,
 	z = 1:1:length(B)
 
 	gsc = readdlm(scanlog, skipstart=1);
-	gradn = gsc[1:n[vn],3]
+	gradn = gsc[1:n,3]
 	gradn = convert(Array{Float64}, gradn)
 	
 	g = "g"
@@ -72,10 +71,10 @@ function plotOmegaTemProxy(scanlog::String,
 	fontsize_theme = Theme(fontsize = fontsize)
 	set_theme!(fontsize_theme)
 
-	ax1 = Axis(f1[1,1], title = latexstring(L"k_y \rho =",k1[vn]), xlabel = L"a / L_n", ylabel = L"ω / (c_s/a)", xminorticksvisible = true, yminorticksvisible = true, xticksize = 40, yticksize = 40, xminorticksize = 20, yminorticksize = 20)
-	ax2 = Axis(f1[1,2], title = latexstring(L"k_y \rho =",k2[vn]), xlabel = L"a / L_n", ylabel = L"ω / (c_s/a)", xminorticksvisible = true, yminorticksvisible = true, xticksize = 40, yticksize = 40, xminorticksize = 20, yminorticksize = 20)
-	ax3 = Axis(f1[2,1], title = latexstring(L"k_y \rho =",k3[vn]), xlabel = L"a / L_n", ylabel = L"ω / (c_s/a)", xminorticksvisible = true, yminorticksvisible = true, xticksize = 40, yticksize = 40, xminorticksize = 20, yminorticksize = 20)
-	ax4 = Axis(f1[2,2], title = latexstring(L"k_y \rho =",k4[vn]), xlabel = L"a / L_n", ylabel = L"ω / (c_s/a)", xminorticksvisible = true, yminorticksvisible = true, xticksize = 40, yticksize = 40, xminorticksize = 20, yminorticksize = 20)
+	ax1 = Axis(f1[1,1], title = latexstring(L"k_y \rho =",k1[zpn]), xlabel = L"a / L_n", ylabel = L"ω / (c_s/a)", xminorticksvisible = true, yminorticksvisible = true, xticksize = 40, yticksize = 40, xminorticksize = 20, yminorticksize = 20)
+	ax2 = Axis(f1[1,2], title = latexstring(L"k_y \rho =",k2[zpn]), xlabel = L"a / L_n", ylabel = L"ω / (c_s/a)", xminorticksvisible = true, yminorticksvisible = true, xticksize = 40, yticksize = 40, xminorticksize = 20, yminorticksize = 20)
+	ax3 = Axis(f1[2,1], title = latexstring(L"k_y \rho =",k3[zpn]), xlabel = L"a / L_n", ylabel = L"ω / (c_s/a)", xminorticksvisible = true, yminorticksvisible = true, xticksize = 40, yticksize = 40, xminorticksize = 20, yminorticksize = 20)
+	ax4 = Axis(f1[2,2], title = latexstring(L"k_y \rho =",k4[zpn]), xlabel = L"a / L_n", ylabel = L"ω / (c_s/a)", xminorticksvisible = true, yminorticksvisible = true, xticksize = 40, yticksize = 40, xminorticksize = 20, yminorticksize = 20)
 
 	#lines!(ax1, gradn, qpr1, color = :green)
 	scatter!(ax1, gradn, gn1, color = :blue, markersize=markersize)
@@ -121,7 +120,7 @@ function plotOmegaTemProxy(scanlog::String,
 	set_theme!(fontsize_theme)
 
 	ax1 = Axis(f2[1,1], title = latexstring("Magnetic field strength ", L"B"), xlabel = L"z", xminorticksvisible = true, yminorticksvisible = true, xticksize = 40, yticksize = 40, xminorticksize = 20, yminorticksize = 20)
-	ax2 = Axis(f2[1,2], title = latexstring("Field line curvature ", L"\kappa"), xlabel = L"z", xminorticksvisible = true, yminorticksvisible = true, xticksize = 40, yticksize = 40, xminorticksize = 20, yminorticksize = 20)
+	ax2 = Axis(f2[1,2], title = latexstring("Field line curvature ", L"\kappa"), xlabel = L"a / L_n", xminorticksvisible = true, yminorticksvisible = true, xticksize = 40, yticksize = 40, xminorticksize = 20, yminorticksize = 20)
 	ax3 = Axis(f2[2,1], title = latexstring(L"g_{yy}"), xlabel = L"z", xminorticksvisible = true, yminorticksvisible = true, xticksize = 40, yticksize = 40, xminorticksize = 20, yminorticksize = 20)
 
 	scatter!(ax1, z, B, color = :blue, markersize=ms2)
